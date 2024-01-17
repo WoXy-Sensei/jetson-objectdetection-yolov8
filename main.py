@@ -53,7 +53,6 @@ def main():
     """
     model = YOLO('models/best.pt')
     prev = 0
-    global detected_count
 
     while capture.isOpened():
 
@@ -63,12 +62,15 @@ def main():
             if time_elapsed > 1. / 5:
                 prev = time.time()
 
-                results = model.predict(
-                    frame, conf=0.5, verbose=False, device='cuda', max_det=5, imgsz=(640, 480))[0]
+                results = model.predict(frame, conf=0.5, verbose=False, device='cuda', max_det=5, imgsz=(640, 480))[0]
 
-                detected = detect_objects(results)
-                draw_objects(frame, detected)
+                detects = detect_objects(results)
+
+                #--------------------------------------------------
+                draw_objects(frame, detects)
                 draw_middle_lines(frame)
+                #--------------------------------------------------
+
                 cv2.imshow("YOLOv8 Inference", frame)
 
                 if cv2.waitKey(1) & 0xFF == ord("q"):
