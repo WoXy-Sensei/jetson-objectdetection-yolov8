@@ -22,28 +22,29 @@ capture.set(cv2.CAP_PROP_FRAME_WIDTH, Camera.width)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, Camera.height)
 
 
-cuda = '1'  
+cuda = '1'
+
+
+def draw_objects(frame, objects: list[Object]) -> None:
+    """
+    Draws the objects on the frame
+    """
+    for object in objects:
+        draw_object(frame, object)
 
 
 def detect_objects(results) -> list[Object]:
-    objects = list()
+    """
+    Detects the objects in the frame
+    """
+
     boxes = results.boxes.xyxy
     objects_count = len(boxes)
 
     if objects_count <= 0:
         return list()
-    
-    for i in range(objects_count):
-        box = boxes[i].tolist()
-        b = BBox(
-            xmin=box[0],
-            ymin=box[1],
-            xmax=box[2],
-            ymax=box[3])
 
-        objects.append(make_object(b))
-
-    return objects
+    return [make_object(boxes[i].tolist()) for i in range(objects_count)]
 
 
 def main():
@@ -52,6 +53,7 @@ def main():
     """
     model = YOLO('models/best.pt')
     prev = 0
+    global detected_count
 
     while capture.isOpened():
 
@@ -65,12 +67,7 @@ def main():
                     frame, conf=0.5, verbose=False, device='cuda', max_det=5, imgsz=(640, 480))[0]
 
                 detected = detect_objects(results)
-
-                if len(detected) > 0:
-
-                    for object in detected:
-                        draw_object(frame, object)
-
+                draw_objects(frame, detected)
                 draw_middle_lines(frame)
                 cv2.imshow("YOLOv8 Inference", frame)
 

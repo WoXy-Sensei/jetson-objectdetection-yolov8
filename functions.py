@@ -3,6 +3,7 @@ from camera import Camera
 import numpy as np
 import math
 
+
 def get_area(b: BBox) -> float:
     """Returns the area of a bounding box"""
     return (b.xmax - b.xmin) * (b.ymax - b.ymin)
@@ -24,7 +25,7 @@ def get_angles(b: BBox) -> Angles:
     py = p.y
 
     # normalizing coordinates
-    nx = (1/(Camera.width/2)) * (px - ((Camera.width / 2 )- 0.5))
+    nx = (1/(Camera.width/2)) * (px - ((Camera.width / 2) - 0.5))
     # normalizing coordinates
     ny = (1/(Camera.height/2)) * (((Camera.height / 2) - 0.5) - py)
 
@@ -36,12 +37,17 @@ def get_angles(b: BBox) -> Angles:
 
     ax = np.arctan(x) * 180 / math.pi
     ay = np.arctan(y) * 180 / math.pi
-            
 
     return Angles(float(ax), float(ay))  # degrees
 
 
-def make_object(box:BBox) -> Object:
+def make_object(box) -> Object:
+    box: BBox = BBox(
+        xmin=box[0],
+        ymin=box[1],
+        xmax=box[2],
+        ymax=box[3])
+
     """Returns an Object"""
     return Object(
         bbox=box,
