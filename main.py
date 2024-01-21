@@ -21,6 +21,8 @@ capture.set(cv2.CAP_PROP_FRAME_HEIGHT, Camera.height)
 
 device = 'cuda' 
 
+model_path = 'models/best.pt' # enter the path to the model
+
 
 def draw_objects(frame, objects: list[Object]) -> None:
     """
@@ -48,7 +50,8 @@ def detect():
     """
     Main function
     """
-    model = YOLO('models/best.pt')
+    model = YOLO(model_path)
+
     prev = 0
 
     while capture.isOpened():
