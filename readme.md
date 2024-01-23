@@ -1,6 +1,6 @@
 # Object Detection Project
 
-This project aims to perform object detection using the YOLOv3 model on the Jetson Nano device.
+This project aims to perform object detection using the YOLOv8 model on the Jetson Nano device.
 
 ## Requirements
 
