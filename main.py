@@ -1,4 +1,3 @@
-
 import math
 import time
 from ultralytics import YOLO
