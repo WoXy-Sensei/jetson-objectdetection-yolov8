@@ -1,8 +1,3 @@
-"""
-FRC: 2024 Game Element Custom Decision
-
-Author: Bardia Ramez - 2024
-"""
 
 import math
 import time
