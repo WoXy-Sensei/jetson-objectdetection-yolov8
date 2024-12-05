@@ -1,4 +1,3 @@
-import math
 import time
 from ultralytics import YOLO
 import cv2
@@ -7,13 +6,12 @@ from vision.functions import make_object
 from vision.classes import Object
 from vision.draws import draw_middle_lines, draw_object
 from dotenv import load_dotenv
-import numpy as np
 import torch
 from robot import Robot
 
 
 torch.set_default_device('cuda')
-load_dotenv()
+load_dotenv(override=True)
 
 # enter 0 for webcam, 1 for external camera
 capture = cv2.VideoCapture(Camera.id)
@@ -61,26 +59,30 @@ def detect():
 
         time_elapsed = time.time() - prev
         success, frame = capture.read()
-        if success:
-            if time_elapsed > 1. / Camera.fps:
+        if not(success) :
+            return
+        if time_elapsed > 1. / Camera.fps:
 
-                results = model.predict(frame, conf=0.5, verbose=False, device=device , max_det=5, imgsz=(640, 480))[0]
+            results = model.predict(
+                frame, conf=0.5, verbose=False, device=device, max_det=5, imgsz=(640, 480))[0]
+
+            if (len(results) > 0):
                 for obj in results:
-                    print(obj.boxes.cls.item())
                     robot.send_data("test", obj.boxes.cls.item())
+            else:
+                robot.send_data("test", -1.0)
 
-                detects = detect_objects(results)
+            detects = detect_objects(results)
 
-                # --------------------------------------------------
-                draw_objects(frame, detects)
-                draw_middle_lines(frame)
-                # --------------------------------------------------
-       
-             
-                cv2.imshow("YOLOv8 Inference", frame)
+            # --------------------------------------------------
+            draw_objects(frame, detects)
+            draw_middle_lines(frame)
+            # --------------------------------------------------
 
-                if cv2.waitKey(1) & 0xFF == ord("q"):
-                    break
+            cv2.imshow("YOLOv8 Inference", frame)
+
+            if cv2.waitKey(1) & 0xFF == ord("q"):
+                break
         else:
             break
 
