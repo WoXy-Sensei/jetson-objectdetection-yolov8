@@ -1,5 +1,5 @@
-from classes import *
-from camera import Camera
+from vision.classes import BBox, Point, Angles, Object
+from vision.camera import Camera
 import numpy as np
 import math
 

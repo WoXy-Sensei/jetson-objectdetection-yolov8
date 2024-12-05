@@ -1,6 +1,6 @@
 import cv2
-from camera import Camera
-from classes import Object, BBox
+from vision.camera import Camera
+from vision.classes import Object, BBox
 
 
 def draw_middle_lines(frame) -> None:
