@@ -1,6 +1,12 @@
 import collections
 
-Object = collections.namedtuple('Object', ['bbox', 'area', 'center', 'angles', 'distance'])
+
+class Object(collections.namedtuple('Object', ['bbox', 'area', 'center', 'angles', 'distance'])):
+    """
+    Object
+    Represents an object detected in the frame
+    """
+    __slots__ = ()
 
 
 class BBox(collections.namedtuple('BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
@@ -26,5 +32,3 @@ class Point(collections.namedtuple('Angles', ['x', 'y'])):
     Represents an ordered pair
     """
     __slots__ = ()
-
-

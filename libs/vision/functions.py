@@ -43,13 +43,7 @@ def get_angles(b: BBox) -> Angles:
     return Angles(float(ax), float(ay))  # degrees
 
 
-def make_object(box) -> Object:
-    box: BBox = BBox(
-        xmin=box[0],
-        ymin=box[1],
-        xmax=box[2],
-        ymax=box[3])
-
+def make_object(box:BBox) -> Object:
     """Returns an Object"""
     return Object(
         bbox=box,

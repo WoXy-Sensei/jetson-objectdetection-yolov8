@@ -4,14 +4,12 @@ from detect import detect
 
 model_path = 'models/best.pt'
 
-async def main():
-    model = FRC2023AI("FRC2023", model_path, (640, 480), ["CUBE", "CONE"], logging=True)
+def main():
+    model = FRC2023AI("FRC2023", model_path, (640, 480), ["CONE", "CUBE"], logging=True)
     robot = Robot()
 
-    try:
-        detect(model, robot)
-    except Exception as e:
-        print(f"Error occurred: {e}")
+    detect(model, robot)
+
 
 
 if __name__ == "__main__":

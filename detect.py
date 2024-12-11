@@ -6,6 +6,7 @@ from libs.vision.draws import draw_middle_lines, draw_object
 from dotenv import load_dotenv
 import torch
 import time
+from AI.classes import Result, Prediction
 
 torch.set_default_device('cuda') # Set the default device to cuda if available
 load_dotenv(override=True) # Load the environment variables
@@ -26,17 +27,17 @@ def draw_objects(frame, objects: list[Object]) -> None:
         draw_object(frame, object)
 
 
-def detect_objects(results) -> list[Object]:
+def detect_objects(results:Result) -> list[Object]:
     """
     Detect objects from the results
     """
-    boxes = results.boxes.xyxy
-    objects_count = len(boxes)
+    boxes = results.predictions
+    objects_count = results.objects_count
 
     if objects_count <= 0:
         return list()
 
-    return [make_object(boxes[i].tolist()) for i in range(objects_count)]
+    return [make_object(boxes[i].bbox) for i in range(objects_count)]
 
 
 def detect(model, robot):
@@ -49,22 +50,26 @@ def detect(model, robot):
         success, frame = capture.read()
         if not success:
             break
-        if time_elapsed > 1. / 2:
-            results = model.predict(
+        if time_elapsed > 1. / camera.fps:
+            result:Result = model.predict(
                 frame, conf=0.5, verbose=False, device=device, max_det=5
             )
 
-            if len(results) > 0:
-                for obj in results:
-                    # Send the class of the object to the robot
-                    robot.send_data("test", obj.boxes.cls.item())
-            else:
-                # Send -1.0 to the robot if no object is detected
-                robot.send_data("test", -1.0)
+            
 
-            detects = detect_objects(results)
+            # if len(results) > 0:
+            #     for obj in results:
+            #         # Send the class of the object to the robot
+            #         robot.send_data("test", obj.boxes.cls.item())
+            # else:
+            #     # Send -1.0 to the robot if no object is detected
+            #     robot.send_data("test", -1.0)
+
+            detects = detect_objects(result)
             draw_objects(frame, detects)
             draw_middle_lines(frame)
+
+            cv2.imshow("Frame", frame)
 
             prev = time.time()
 

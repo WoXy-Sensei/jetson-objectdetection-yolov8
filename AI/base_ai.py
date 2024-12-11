@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from AI.classes import Result
 
 class BaseAI(ABC):
     def __init__(self, name:str, model_path:str, input_size:tuple, classes:list[str],logging=False):
@@ -9,7 +10,7 @@ class BaseAI(ABC):
         self.logging = logging
 
     @abstractmethod
-    def predict(self, image):
+    def predict(self, image) -> Result:
         """
         Abstract method for making predictions.
         To be implemented by subclasses.
