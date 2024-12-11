@@ -1,0 +1,13 @@
+{
+    "id": 0,
+    "width": 640,
+    "height": 480,
+    "horizontal_mount_offset": 0,
+    "vertical_mount_offset": 0,
+    "horizontal_FOV": 24.45,
+    "vertical_FOV": 14.07,
+    "sensor_width": 3.76,
+    "sensor_height": 2.74,
+    "focal_length": 3.6,
+    "fps": 5
+}

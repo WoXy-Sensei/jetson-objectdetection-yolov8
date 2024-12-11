@@ -1,17 +1,18 @@
 import cv2
-from vision.camera import Camera
-from vision.classes import Object, BBox
+from libs.vision.camera import Camera
+from libs.vision.classes import Object, BBox
 
+camera = Camera()
 
 def draw_middle_lines(frame) -> None:
     """
     Draws the middle lines on the frame
     """
-    cv2.line(frame, (0, Camera.height // 2),
-             (Camera.width, Camera.height // 2), (0, 255, 0), 2)
+    cv2.line(frame, (0, camera.height // 2),
+             (camera.width, camera.height // 2), (0, 255, 0), 2)
 
-    cv2.line(frame, (Camera.width // 2, 0),
-             (Camera.width // 2, Camera.height), (0, 255, 0), 2)
+    cv2.line(frame, (camera.width // 2, 0),
+             (camera.width // 2, camera.height), (0, 255, 0), 2)
 
 
 def draw_object(frame, object: Object) -> None:

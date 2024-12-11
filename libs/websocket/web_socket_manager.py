@@ -1,23 +1,24 @@
 import websockets
-from utils.log import log
+from libs.utils.log import log
 
 
 class WebSocketServerManager:
     def __init__(self, host="localhost", port=8765):
+        """ Initialize the WebSocket server manager. """
         self.host = host
         self.port = port
-        self.connected_clients = {}
+        self.connected_clients = []
         self.server = None
 
     async def start_server(self):
         """Start the WebSocket server."""
         self.server = await websockets.serve(self.handler, self.host, self.port)
         log(f"WebSocket server running on ws://{self.host}:{self.port}")
-        await self.server.wait_closed()
+        # await self.server.wait_closed()
 
-    async def handler(self, websocket, path):
+    async def handler(self, websocket):
         """Handle new client connections and messages."""
-        self.connected_clients.add(websocket)
+        self.connected_clients.append(websocket)
         log(f"Client connected: {websocket.remote_address}", "success")
         try:
             async for message in websocket:

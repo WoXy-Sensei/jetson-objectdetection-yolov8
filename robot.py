@@ -1,7 +1,7 @@
-from networktable.NetworkTable import NetworkTable
-from networktable.NetworkTableManagement import NetworkTableManagement
+from libs.networktable.network_table import NetworkTable
+from libs.networktable.network_table_manager import NetworkTableManager
 import os
-from utils.log import log
+from libs.utils.log import log
 from dotenv import load_dotenv
 
 
@@ -19,7 +19,7 @@ class Robot:
             Team Number: {teamNumber}
         """)
         self.inst = NetworkTable(clientName, tableName, serverAdress, teamNumber).get_table()
-        self.manager = NetworkTableManagement(self.inst)
+        self.manager = NetworkTableManager(self.inst)
         # Create a publishers and subscribers
         self.test = self.manager.doublePublisher("test", 0)
 

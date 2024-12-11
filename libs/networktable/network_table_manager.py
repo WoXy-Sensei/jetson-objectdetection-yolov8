@@ -1,8 +1,8 @@
 from ntcore import NetworkTable
-from utils.log import log
+from libs.utils.log import log
 
 
-class NetworkTableManagement:
+class NetworkTableManager:
     def __init__(self, table: NetworkTable):
         self.table = table
         self.publishers = {}

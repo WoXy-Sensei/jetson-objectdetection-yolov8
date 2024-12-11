@@ -1,5 +1,5 @@
 import ntcore
-from utils.log import log
+from libs.utils.log import log
 
 
 class NetworkTable:

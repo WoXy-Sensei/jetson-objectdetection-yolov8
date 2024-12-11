@@ -1,8 +1,10 @@
-from vision.classes import BBox, Point, Angles, Object
-from vision.camera import Camera
+from libs.vision.classes import BBox, Point, Angles, Object
+from libs.vision.camera import Camera
 import numpy as np
 import math
 
+
+camera = Camera()
 
 def get_area(b: BBox) -> float:
     """Returns the area of a bounding box"""
@@ -25,12 +27,12 @@ def get_angles(b: BBox) -> Angles:
     py = p.y
 
     # normalizing coordinates
-    nx = (1/(Camera.width/2)) * (px - ((Camera.width / 2) - 0.5))
+    nx = (1/(camera.width/2)) * (px - ((camera.width / 2) - 0.5))
     # normalizing coordinates
-    ny = (1/(Camera.height/2)) * (((Camera.height / 2) - 0.5) - py)
+    ny = (1/(camera.height/2)) * (((camera.height / 2) - 0.5) - py)
 
-    vpw = 2.0 * np.tan(Camera.horizontal_FOV / 2)  # visual plane width
-    vph = 2.0 * np.tan(Camera.vertical_FOV / 2)  # visual plane height
+    vpw = 2.0 * np.tan(camera.horizontal_FOV / 2)  # visual plane width
+    vph = 2.0 * np.tan(camera.vertical_FOV / 2)  # visual plane height
 
     x = vpw / 2 * nx
     y = vph / 2 * ny

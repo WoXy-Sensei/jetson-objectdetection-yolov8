@@ -1,94 +1,19 @@
-import time
-from ultralytics import YOLO
-import cv2
-from vision.camera import Camera
-from vision.functions import make_object
-from vision.classes import Object
-from vision.draws import draw_middle_lines, draw_object
-from dotenv import load_dotenv
-import torch
+from AI.frc2023_ai import FRC2023AI
 from robot import Robot
+import asyncio
+from detect import detect
 
+model_path = 'models/best.pt'
 
-torch.set_default_device('cuda')
-load_dotenv(override=True)
-
-# enter 0 for webcam, 1 for external camera
-capture = cv2.VideoCapture(Camera.id)
-capture.set(cv2.CAP_PROP_FRAME_WIDTH, Camera.width)
-capture.set(cv2.CAP_PROP_FRAME_HEIGHT, Camera.height)
-
-device = 'cuda'
-
-model_path = 'models/best.pt'  # enter the path to the model
-
-
-def draw_objects(frame, objects: list[Object]) -> None:
-    """
-    Draws the objects on the frame
-    """
-    for object in objects:
-        draw_object(frame, object)
-
-
-def detect_objects(results) -> list[Object]:
-    """
-    Detects the objects in the frame
-    """
-
-    boxes = results.boxes.xyxy
-    objects_count = len(boxes)
-
-    if objects_count <= 0:
-        return list()
-
-    return [make_object(boxes[i].tolist()) for i in range(objects_count)]
-
-
-def detect():
-    """
-    Main function
-    """
-    model = YOLO(model_path)
-
-    prev = 0
-
+async def main():
+    model = FRC2023AI("FRC2023", model_path, (640, 480), ["CUBE", "CONE"], logging=True)
     robot = Robot()
 
-    while capture.isOpened():
-
-        time_elapsed = time.time() - prev
-        success, frame = capture.read()
-        if not(success) :
-            return
-        if time_elapsed > 1. / Camera.fps:
-
-            results = model.predict(
-                frame, conf=0.5, verbose=False, device=device, max_det=5, imgsz=(640, 480))[0]
-
-            if (len(results) > 0):
-                for obj in results:
-                    robot.send_data("test", obj.boxes.cls.item())
-            else:
-                robot.send_data("test", -1.0)
-
-            detects = detect_objects(results)
-
-            # --------------------------------------------------
-            draw_objects(frame, detects)
-            draw_middle_lines(frame)
-            # --------------------------------------------------
-
-            cv2.imshow("YOLOv8 Inference", frame)
-
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
-        else:
-            break
-
-    capture.release()
-    cv2.destroyAllWindows()
+    try:
+        detect(model, robot)
+    except Exception as e:
+        print(f"Error occurred: {e}")
 
 
-if __name__ == '__main__':
-    detect()
+if __name__ == "__main__":
+    asyncio.run(main())
