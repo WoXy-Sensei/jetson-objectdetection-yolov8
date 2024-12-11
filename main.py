@@ -1,6 +1,5 @@
 from AI.frc2023_ai import FRC2023AI
 from robot import Robot
-import asyncio
 from detect import detect
 
 model_path = 'models/best.pt'
@@ -16,4 +15,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
